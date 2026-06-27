@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  background: #121212;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+header {
+  padding: 30px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 300px;
+  max-width: 90%;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+}
+
+.album {
+  margin: 40px;
+}
+
+.album-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.album-header img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,.5);
+}
+
+.cancion {
+  background: #1e1e1e;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+
+audio {
+  width: 100%;
+  margin-top: 10px;
+}
