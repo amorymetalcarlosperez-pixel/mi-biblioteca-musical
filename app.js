@@ -1,4 +1,4 @@
-const API = "https://script.google.com/macros/s/AKfycbzWBRWWmDe_k5LomyIyHe2la96oo2TkksgvIG2XYRam_wGgpXfpce6RZj_SbdCNpLB-/exec";
+const API = "https://script.google.com/macros/s/AKfycby1XI2MzMSQ9X6JmdQFWAZq8kbT2a-wl-4W_bXfgCtNOY7eULl42QLUvpz9t_cd55pq/exec";
 
 const albumsContainer = document.getElementById("albums");
 const buscador = document.getElementById("buscador");
