@@ -4,6 +4,26 @@ const albumsContainer = document.getElementById("albums");
 const buscador = document.getElementById("buscador");
 let cancionesGlobal = [];
 
+// Función para limpiar y validar enlaces de Google Drive
+function limpiarEnlaceGoogleDrive(enlace) {
+  if (!enlace) return null;
+  
+  // Si es un enlace de Google Drive, convertir a formato descargable
+  if (enlace.includes('drive.google.com')) {
+    const fileId = enlace.match(/[-\w]{25,}/);
+    if (fileId) {
+      return `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+    }
+  }
+  
+  // Si es cualquier otro enlace válido
+  if (enlace.startsWith('http') || enlace.startsWith('blob:')) {
+    return enlace;
+  }
+  
+  return null;
+}
+
 function render(canciones){
   albumsContainer.innerHTML = "";
   
@@ -28,7 +48,7 @@ function render(canciones){
     bloque.className = "album";
     bloque.innerHTML = `
       <div class="album-header">
-        <img src="${albums[album].portada}" alt="${album}">
+        <img src="${albums[album].portada}" alt="${album}" onerror="this.src='https://via.placeholder.com/180?text=No+Portada'">
         <div>
           <h2>${album}</h2>
           <p>${albums[album].canciones.length} canciones</p>
@@ -36,15 +56,16 @@ function render(canciones){
       </div>
     `;
     albums[album].canciones.forEach(c => {
-      // Validar que el enlace exista y sea válido
-      const enlaceValido = c.enlace && (c.enlace.startsWith('http') || c.enlace.startsWith('blob:'));
+      // Validar y limpiar el enlace
+      const enlace = limpiarEnlaceGoogleDrive(c.enlace);
+      
       bloque.innerHTML += `
         <div class="cancion">
           <h3>${c.titulo}</h3>
           <p class="artista">${c.artista || 'Artista desconocido'}</p>
-          ${enlaceValido ? `
-            <audio controls crossorigin="anonymous">
-              <source src="${c.enlace}" type="audio/mpeg">
+          ${enlace ? `
+            <audio controls controlsList="nodownload" style="width: 100%;">
+              <source src="${enlace}" type="audio/mpeg">
               Tu navegador no soporta reproducción de audio.
             </audio>
           ` : `<p class="error">❌ Enlace de audio no disponible</p>`}
@@ -55,7 +76,7 @@ function render(canciones){
   });
 }
 
-// Cargar datos del API con manejo de errores
+// Cargar datos del API con manejo de errores mejorado
 fetch(API)
   .then(r => {
     if (!r.ok) throw new Error(`Error HTTP: ${r.status}`);
@@ -67,6 +88,7 @@ fetch(API)
     }
     cancionesGlobal = data;
     console.log(`✅ Se cargaron ${data.length} canciones`);
+    console.log('Datos recibidos:', data);
     render(data);
   })
   .catch(error => {
@@ -76,6 +98,7 @@ fetch(API)
         <h2>⚠️ Error al cargar las canciones</h2>
         <p>${error.message}</p>
         <p>Verifica que el API de Google Sheets esté compartido públicamente.</p>
+        <p class="debug">Abre la consola (F12) para ver más detalles.</p>
       </div>
     `;
   });
